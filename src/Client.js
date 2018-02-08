@@ -3,6 +3,7 @@ import './Client.css';
 
 // this is perhaps wrong
 var WebTorrent = require('webtorrent');
+var parse_torrent = require('parse-torrent');
 
 class Client extends Component {
     constructor(props) {
@@ -12,6 +13,17 @@ class Client extends Component {
         this.client = new WebTorrent();
         // temporary
         this.id = 1;
+    }
+
+    // TODO: remove torrent, global upload/downlaod
+    add_torrent(magnet_link) {
+        let arr = this.state.torrents.slice();
+        arr.push(<TorrentView
+            key={this.id++}
+            magnet={magnet_link}
+            client={this.client}
+        />);
+        this.setState({torrents: arr});
     }
 
     render() {
@@ -25,35 +37,34 @@ class Client extends Component {
             </div>
         );
     }
-
-    // TODO: remove torrent global upload/downlaod
-    add_torrent(magnet_link) {
-        let arr = this.state.torrents.slice();
-        arr.push(<TorrentView key={this.id++} magnet={magnet_link} client={this.client} />);
-        this.setState({torrents: arr});
-    }
 }
 
 class TorrentView extends Component {
     constructor(props) {
         super(props);
-        console.log('been there done that');
         // this could break: ontorrent handler might have to be keyword
-        this.torrent = props.client.add(props.magnet_link, this.on_torrent);
-        // NOTE: state variables are referenced when potentially undefined.
-        // give `loading` values?
+        this.on_torrent = this.on_torrent.bind(this);
+        this.torrent = props.client.add(
+            props.magnet, this.on_torrent
+        );
+        this.state = {
+            name: 'sample',
+            download_speed: 0,
+            upload_speed: 0,
+            progress: 0
+        };
+    }
+
+    update_stats() {
+        this.setState({download_speed: this.torrent.downloadSpeed});
+        this.setState({upload_speed: this.torrent.uploadSpeed});
+        this.setState({progress: this.torrent.progress});
     }
 
     on_torrent(torrent) {
         console.log('Metadata fetched');
-        // console.log(torrent.magnetURI);
-        this.setState({name: this.torrent.name});
-    }
-
-    update_stats() {
-        this.setState({download_speed: this.torren.downloadSpeed});
-        this.setState({upload_speed: this.torren.uploadSpeed});
-        this.setState({progress: this.torren.progress});
+        let info = parse_torrent(torrent.torrentFile);
+        this.setState({name: info.name});
     }
 
     componentDidMount() {
@@ -69,10 +80,10 @@ class TorrentView extends Component {
         // TODO: pause/resume/save buttons
         return (
             <div>
-                <div> {this.state.name} </div>
-                <div> {this.state.download_speed} </div>
-                <div> {this.state.progress} </div>
-                <div> {this.state.upload_speed} </div>
+                <span> {this.state.name} </span>
+                <span> {this.state.download_speed} </span>
+                <span> {this.state.progress} </span>
+                <span> {this.state.upload_speed} </span>
                 <button>save</button>
             </div>
         );
@@ -91,7 +102,6 @@ class AddButton extends Component {
     on_submit(event) {
         this.props.new_torrent(this.state.link);
 
-        console.log('sent');
         event.preventDefault();
     }
 
