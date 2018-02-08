@@ -11,6 +11,11 @@ class Client extends Component {
         this.add_torrent = this.add_torrent.bind(this);
         this.state = {torrents: []};
         this.client = new WebTorrent();
+
+        this.client.on('error', function (err) {
+            console.error('ERROR: ' + err.message);
+        });
+
         // temporary
         this.id = 1;
     }
@@ -42,8 +47,11 @@ class Client extends Component {
 class TorrentView extends Component {
     constructor(props) {
         super(props);
-        // this could break: ontorrent handler might have to be keyword
         this.on_torrent = this.on_torrent.bind(this);
+        this.pause_torrent = this.pause_torrent.bind(this);
+        this.resume_torrent = this.resume_torrent.bind(this);
+
+        // this could break: ontorrent handler might have to be keyword
         this.torrent = props.client.add(
             props.magnet, this.on_torrent
         );
@@ -55,16 +63,36 @@ class TorrentView extends Component {
         };
     }
 
+    // NOTE: this pauses NEW connections
+    // looks like an actual pause of download is not supported
+    pause_torrent(event) {
+        console.log('paused');
+        this.torrent.pause();
+    }
+
+    resume_torrent(event) {
+        console.log('resumed');
+        this.torrent.resume();
+    }
+
+    // TODO: use StreamSaver to save the torrent as it's downloading.
+    // You can attempt a nasty hack to delete the downloaded pieces that have
+    // been saved to limit memory usage. May not work
+    save_torrent() {}
+
     update_stats() {
+        // console.log(this.torrent.name);
         this.setState({download_speed: this.torrent.downloadSpeed});
         this.setState({upload_speed: this.torrent.uploadSpeed});
         this.setState({progress: this.torrent.progress});
     }
 
     on_torrent(torrent) {
-        console.log('Metadata fetched');
-        let info = parse_torrent(torrent.torrentFile);
-        this.setState({name: info.name});
+        // console.log('Metadata fetched');
+        // let info = parse_torrent(torrent.torrentFile);
+        // this.setState({name: info.name});
+        // this didnt work 10 minutes ago???
+        this.setState({name: torrent.name});
     }
 
     componentDidMount() {
@@ -77,14 +105,15 @@ class TorrentView extends Component {
 
     render() {
         console.log('rendering a torrent');
-        // TODO: pause/resume/save buttons
         return (
             <div>
                 <span> {this.state.name} </span>
-                <span> {this.state.download_speed} </span>
-                <span> {this.state.progress} </span>
-                <span> {this.state.upload_speed} </span>
-                <button>save</button>
+                <span> {this.state.progress.toFixed(2)} </span>
+                <span> {Math.round(this.state.download_speed / 1024)} Kb/s</span>
+                <span> {Math.round(this.state.upload_speed / 1024)} Kb/s</span>
+                <button onClick={this.pause_torrent} >pause</button>
+                <button onClick={this.resume_torrent} >resume</button>
+                <button onClick={this.save} >save</button>
             </div>
         );
     }
