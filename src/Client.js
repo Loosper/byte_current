@@ -3,12 +3,14 @@ import './Client.css';
 
 // this is perhaps wrong
 var WebTorrent = require('webtorrent');
-var parse_torrent = require('parse-torrent');
+// var parse_torrent = require('parse-torrent');
 
 class Client extends Component {
     constructor(props) {
         super(props);
         this.add_torrent = this.add_torrent.bind(this);
+        this.remove_torrent = this.remove_torrent.bind(this);
+
         this.state = {torrents: []};
         this.client = new WebTorrent();
 
@@ -20,15 +22,23 @@ class Client extends Component {
         this.id = 1;
     }
 
-    // TODO: remove torrent, global upload/downlaod
+    // TODO: global upload/downlaod
     add_torrent(magnet_link) {
         let arr = this.state.torrents.slice();
         arr.push(<TorrentView
             key={this.id++}
             magnet={magnet_link}
             client={this.client}
+            remove={this.remove_torrent}
         />);
         this.setState({torrents: arr});
+    }
+
+    remove_torrent(torrent_view) {
+        let index = this.state.torrents.indexOf(torrent_view);
+        let new_torrents = this.state.torrents.slice();
+        new_torrents.splice(index, 1);
+        this.setState({torrents: new_torrents});
     }
 
     render() {
@@ -100,7 +110,9 @@ class TorrentView extends Component {
     }
 
     componentWillUnmount() {
+        console.log('removing');
         clearInterval(this.stats_service);
+        this.props.client.remove(this.torrent.magnetURI);
     }
 
     render() {
@@ -114,6 +126,7 @@ class TorrentView extends Component {
                 <button onClick={this.pause_torrent} >pause</button>
                 <button onClick={this.resume_torrent} >resume</button>
                 <button onClick={this.save} >save</button>
+                <button onClick={(e) => {this.props.remove(this);}} >remove</button>
             </div>
         );
     }
