@@ -5,6 +5,7 @@ import './Client.css';
 var WebTorrent = require('webtorrent');
 // var parse_torrent = require('parse-torrent');
 
+
 class Client extends Component {
     constructor(props) {
         super(props);
@@ -53,6 +54,7 @@ class Client extends Component {
         );
     }
 }
+
 
 class TorrentView extends Component {
     constructor(props) {
@@ -131,6 +133,7 @@ class TorrentView extends Component {
         );
     }
 }
+
 
 class AddButton extends Component {
     constructor(props) {
