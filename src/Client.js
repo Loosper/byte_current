@@ -3,7 +3,11 @@ import './Client.css';
 
 // this is perhaps wrong
 var WebTorrent = require('webtorrent');
+var streamSaver = require('streamsaver');
 // var parse_torrent = require('parse-torrent');
+
+// TODO: test browser support.
+// This app uses a lot of modern fetures and will break on old browsers
 
 
 class Client extends Component {
@@ -60,45 +64,21 @@ class TorrentView extends Component {
     constructor(props) {
         super(props);
         this.on_torrent = this.on_torrent.bind(this);
-        this.pause_torrent = this.pause_torrent.bind(this);
-        this.resume_torrent = this.resume_torrent.bind(this);
+        this.save = this.save.bind(this);
 
-        // this could break: ontorrent handler might have to be keyword
+        // TODO: custom chunk store; consider not saving for seeding
         this.torrent = props.client.add(
             props.magnet, this.on_torrent
         );
         this.state = {
-            name: 'sample',
-            download_speed: 0,
-            upload_speed: 0,
-            progress: 0
+            save_opts: []
         };
     }
 
-    // NOTE: this pauses NEW connections
-    // looks like an actual pause of download is not supported
-    pause_torrent(event) {
-        console.log('paused');
-        this.torrent.pause();
-    }
-
-    resume_torrent(event) {
-        console.log('resumed');
-        this.torrent.resume();
-    }
-
     // TODO: use StreamSaver to save the torrent as it's downloading.
-    // You can attempt a nasty hack to delete the downloaded pieces that have
-    // been saved to limit memory usage. May not work
-    save_torrent() {}
-
-    update_stats() {
-        // console.log(this.torrent.name);
-        this.setState({download_speed: this.torrent.downloadSpeed});
-        this.setState({upload_speed: this.torrent.uploadSpeed});
-        this.setState({progress: this.torrent.progress});
+    save(event) {
+        console.log(this.torrent.files);
     }
-
     on_torrent(torrent) {
         // console.log('Metadata fetched');
         // let info = parse_torrent(torrent.torrentFile);
@@ -107,13 +87,10 @@ class TorrentView extends Component {
         this.setState({name: torrent.name});
     }
 
-    componentDidMount() {
-        this.stats_service = setInterval(() => {this.update_stats();}, 1000);
-    }
 
     componentWillUnmount() {
         console.log('removing');
-        clearInterval(this.stats_service);
+        // clearInterval(this.stats_service);
         this.props.client.remove(this.torrent.magnetURI);
     }
 
@@ -121,16 +98,97 @@ class TorrentView extends Component {
         console.log('rendering a torrent');
         return (
             <div>
-                <span> {this.state.name} </span>
-                <span> {this.state.progress.toFixed(2)} </span>
-                <span> {Math.round(this.state.download_speed / 1024)} Kb/s</span>
-                <span> {Math.round(this.state.upload_speed / 1024)} Kb/s</span>
-                <button onClick={this.pause_torrent} >pause</button>
-                <button onClick={this.resume_torrent} >resume</button>
+                <TorrentStats torrent={this.torrent}/>
+                <PauseTorrent torrent={this.torrent} />
+                <ResumeTorrent torrent={this.torrent} />
                 <button onClick={this.save} >save</button>
                 <button onClick={(e) => {this.props.remove(this);}} >remove</button>
             </div>
         );
+    }
+}
+
+
+class TorrentStats extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            name: 'sample',
+            download_speed: 0,
+            upload_speed: 0,
+            progress: 0,
+            save_opts: []
+        };
+    }
+
+    update_stats() {
+        // console.log(this.torrent.name);
+        this.setState({download_speed: this.props.torrent.downloadSpeed});
+        this.setState({upload_speed: this.props.torrent.uploadSpeed});
+        this.setState({progress: this.props.torrent.progress});
+    }
+
+    componentDidMount() {
+        this.stats_service = setInterval(() => {this.update_stats();}, 1000);
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.stats_service);
+    }
+
+    render() {
+        return (
+            <React.Fragment>
+                <span> {this.state.name} </span>
+                <span> {this.state.progress.toFixed(2)} </span>
+                <span> {Math.round(this.state.download_speed / 1024)} Kb/s</span>
+                <span> {Math.round(this.state.upload_speed / 1024)} Kb/s</span>
+            </React.Fragment>
+        );
+    }
+}
+
+
+class PauseTorrent extends Component {
+    constructor(props) {
+        super(props);
+        this.pause_torrent = this.pause_torrent.bind(this);
+    }
+
+    render() {
+        return (<button onClick={this.pause_torrent} >pause</button>);
+    }
+
+    // NOTE: this pauses NEW connections
+    // looks like an actual pause of download is not supported
+    pause_torrent(event) {
+        console.log('paused');
+        this.props.torrent.pause();
+    }
+}
+
+
+class ResumeTorrent extends Component {
+    constructor(props) {
+        super(props);
+        this.resume_torrent = this.resume_torrent.bind(this);
+    }
+
+    render() {
+        return (<button onClick={this.resume_torrent} >resume</button>);
+    }
+
+    resume_torrent(event) {
+        console.log('resumed');
+        this.props.torrent.resume();
+    }
+}
+
+
+class FileSaver extends Component {
+    constructor(props) {
+        super(props);
     }
 }
 
@@ -167,5 +225,6 @@ class AddButton extends Component {
         );
     }
 }
+
 
 export default Client;
