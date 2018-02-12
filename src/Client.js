@@ -29,6 +29,7 @@ class Client extends Component {
 
     // TODO: global upload/downlaod
     add_torrent(magnet_link) {
+        // TODO: validate the magnet/handle unvalid torrents
         let arr = this.state.torrents.slice();
         arr.push(<TorrentView
             key={this.id++}
@@ -79,18 +80,16 @@ class TorrentView extends Component {
     save(event) {
         console.log(this.torrent.files);
     }
+
     on_torrent(torrent) {
-        // console.log('Metadata fetched');
         // let info = parse_torrent(torrent.torrentFile);
         // this.setState({name: info.name});
-        // this didnt work 10 minutes ago???
         this.setState({name: torrent.name});
     }
 
 
     componentWillUnmount() {
         console.log('removing');
-        // clearInterval(this.stats_service);
         this.props.client.remove(this.torrent.magnetURI);
     }
 
@@ -113,6 +112,8 @@ class TorrentStats extends Component {
     constructor(props) {
         super(props);
 
+        this.update_stats = this.update_stats.bind(this);
+
         this.state = {
             name: 'sample',
             download_speed: 0,
@@ -123,14 +124,13 @@ class TorrentStats extends Component {
     }
 
     update_stats() {
-        // console.log(this.torrent.name);
         this.setState({download_speed: this.props.torrent.downloadSpeed});
         this.setState({upload_speed: this.props.torrent.uploadSpeed});
         this.setState({progress: this.props.torrent.progress});
     }
 
     componentDidMount() {
-        this.stats_service = setInterval(() => {this.update_stats();}, 1000);
+        this.stats_service = setInterval(this.update_stats, 1000);
     }
 
     componentWillUnmount() {
