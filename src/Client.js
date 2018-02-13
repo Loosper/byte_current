@@ -8,7 +8,7 @@ var streamSaver = require('streamsaver');
 
 // TODO: test browser support.
 // This app uses a lot of modern fetures and will break on old browsers
-
+// Use fileSaver for firefox or something like this
 
 class Client extends Component {
     constructor(props) {
@@ -65,20 +65,18 @@ class TorrentView extends Component {
     constructor(props) {
         super(props);
         this.on_torrent = this.on_torrent.bind(this);
-        this.save = this.save.bind(this);
 
         // TODO: custom chunk store; consider not saving for seeding
         this.torrent = props.client.add(
             props.magnet, this.on_torrent
         );
+
+        // BUG: this doesn't stop downloading after metadata fetch
+        this.torrent.pause();
+
         this.state = {
             save_opts: []
         };
-    }
-
-    // TODO: use StreamSaver to save the torrent as it's downloading.
-    save(event) {
-        console.log(this.torrent.files);
     }
 
     on_torrent(torrent) {
@@ -100,8 +98,8 @@ class TorrentView extends Component {
                 <TorrentStats torrent={this.torrent}/>
                 <PauseTorrent torrent={this.torrent} />
                 <ResumeTorrent torrent={this.torrent} />
-                <button onClick={this.save} >save</button>
                 <button onClick={(e) => {this.props.remove(this);}} >remove</button>
+                <FileSaver torrent={this.torrent} />
             </div>
         );
     }
@@ -189,6 +187,46 @@ class ResumeTorrent extends Component {
 class FileSaver extends Component {
     constructor(props) {
         super(props);
+
+        this.get_files = this.get_files.bind(this);
+        this.save_file = this.save_file.bind(this);
+
+        this.props.torrent.on('ready', this.get_files);
+        this.files = [];
+        this.state = {menu: false};
+    }
+
+    get_files() {
+        for (let file of this.props.torrent.files) {
+            this.files.push(
+                <button onClick={(e) => this.save_file(file)} >{file.name}</button>
+            );
+        }
+    }
+
+    // REVIEW: this is all fine and dandy, but it does NOT work in firefox :(
+    save_file(file) {
+        this.setState({menu: false});
+        let stream = streamSaver.createWriteStream(file.name, file.size);
+        let writer = stream.getWriter();
+
+        file.createReadStream()
+            .on('data', (data) => {writer.write(data); console.log('fetched data');})
+            .on('end', () => {writer.close(); console.log('done');});
+    }
+
+    render() {
+        if (!this.state.menu) {
+            return (
+                <button onClick={(e) => this.setState({menu: true})} >save</button>
+            );
+        } else {
+            return (
+                <div>
+                    {this.files}
+                </div>
+            );
+        }
     }
 }
 
