@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import './Client.css';
 
-// this is perhaps wrong
-var WebTorrent = require('webtorrent');
-var streamSaver = require('streamsaver');
+import WebTorrent from 'webtorrent';
+import streamSaver from 'streamsaver';
 // var parse_torrent = require('parse-torrent');
 
 // TODO: test browser support.
