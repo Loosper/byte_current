@@ -4,8 +4,9 @@ import WebTorrent from 'webtorrent';
 import AddButton from './AddButton.js';
 import TorrentView from './TorrentView.js';
 import FileSaver from './FileSaver.js';
-
+import NotificationView from './NotificationView';
 import './Client.css';
+
 
 // TODO: test browser support.
 // This app uses a lot of modern fetures and will break on old browsers
@@ -17,10 +18,12 @@ class Client extends Component {
         this.add_torrent = this.add_torrent.bind(this);
         this.remove_torrent = this.remove_torrent.bind(this);
         this.save_torrent = this.save_torrent.bind(this);
+        this.close_error = this.close_error.bind(this);
 
         this.state = {
             torrents: [],
-            saver: null
+            saver: null,
+            error: null
         };
         this.client = new WebTorrent();
         this.hashes = new Set();
@@ -37,14 +40,12 @@ class Client extends Component {
         let arr = this.state.torrents.slice();
 
         if (magnet_link.match(/\burn:btih:([A-F\d]+)\b/i) == null) {
-            // TODO: make an error popup
-            console.log('invalid magnet');
+            this.display_error('Invalid magnet link');
             return;
         }
 
         if (this.hashes.has(magnet_link)) {
-            // TODO: display error
-            console.log('already added');
+            this.display_error('Torrent already added');
             return;
         } else {
             this.hashes.add(magnet_link);
@@ -74,6 +75,16 @@ class Client extends Component {
         this.hashes.delete(torrent_view.magnet);
     }
 
+    display_error(error_msg) {
+        this.setState({
+            error: <NotificationView message={error_msg} close={this.close_error}/>
+        });
+    }
+
+    close_error() {
+        this.setState({error: null});
+    }
+
     render() {
         return (
             <div>
@@ -83,6 +94,7 @@ class Client extends Component {
                 <AddButton new_torrent={this.add_torrent} />
                 {this.state.torrents}
                 {this.state.saver}
+                {this.state.error}
             </div>
         );
     }
