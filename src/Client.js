@@ -5,6 +5,7 @@ import AddButton from './AddButton.js';
 import TorrentView from './TorrentView.js';
 import FileSaver from './FileSaver.js';
 import NotificationView from './NotificationView';
+import ClientStats from './ClientStats';
 import './Client.css';
 
 
@@ -91,6 +92,7 @@ class Client extends Component {
                 <header>
                     <h1>Torrent app</h1>
                 </header>
+                <ClientStats client={this.client}/>
                 <AddButton new_torrent={this.add_torrent} />
                 {this.state.torrents}
                 {this.state.saver}
