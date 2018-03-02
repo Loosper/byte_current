@@ -10,22 +10,27 @@ class FileSaver extends Component {
         this.get_files = this.get_files.bind(this);
         this.save_file = this.save_file.bind(this);
 
-        this.props.torrent.on('ready', this.get_files);
+        this.torrent = props.torrent;
         this.files = [];
-        this.state = {menu: false};
+
+        if (this.torrent.ready) {
+            this.get_files();
+        } else {
+            this.torrent.on('ready', this.get_files);
+        }
     }
 
     get_files() {
-        for (let file of this.props.torrent.files) {
+        let id = 1;
+        for (let file of this.torrent.files) {
             this.files.push(
-                <button onClick={(e) => this.save_file(file)} >{file.name}</button>
+                <button key={id++} onClick={(e) => this.save_file(file)} >{file.name}</button>
             );
         }
     }
 
     // REVIEW: this is all fine and dandy, but it does NOT work in firefox :(
     save_file(file) {
-        this.setState({menu: false});
         let stream = streamSaver.createWriteStream(file.name, file.size);
         let writer = stream.getWriter();
 
@@ -35,17 +40,12 @@ class FileSaver extends Component {
     }
 
     render() {
-        if (!this.state.menu) {
-            return (
-                <button onClick={(e) => this.setState({menu: true})} >save</button>
-            );
-        } else {
-            return (
-                <div>
-                    {this.files}
-                </div>
-            );
-        }
+        return (
+            <div>
+                <div>{this.torrent.name}</div>
+                <div>{this.files}</div>
+            </div>
+        );
     }
 }
 

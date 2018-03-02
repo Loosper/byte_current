@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 
-import FileSaver from './FileSaver.js';
 
 class TorrentView extends Component {
     constructor(props) {
@@ -11,6 +10,8 @@ class TorrentView extends Component {
         this.torrent = props.client.add(
             props.magnet, this.on_torrent
         );
+
+        this.magnet = props.magnet;
 
         // BUG: this doesn't stop downloading after metadata fetch
         this.torrent.pause();
@@ -26,10 +27,9 @@ class TorrentView extends Component {
         this.setState({name: torrent.name});
     }
 
-
     componentWillUnmount() {
         console.log('removing');
-        this.props.client.remove(this.torrent.magnetURI);
+        this.props.client.remove(this.magnet);
     }
 
     render() {
@@ -40,7 +40,9 @@ class TorrentView extends Component {
                 <PauseTorrent torrent={this.torrent} />
                 <ResumeTorrent torrent={this.torrent} />
                 <button onClick={(e) => {this.props.remove(this);}} >remove</button>
-                <FileSaver torrent={this.torrent} />
+                <button
+                    onClick={(e) => this.props.save(this.torrent)}
+                >save</button>
             </div>
         );
     }
