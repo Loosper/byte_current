@@ -90,7 +90,7 @@ class Client extends Component {
         return (
             <div>
                 <header>
-                    <h1>Torrent app</h1>
+                    <h1>ByteCurrent</h1>
                 </header>
                 <ClientStats client={this.client}/>
                 <AddButton new_torrent={this.add_torrent} />
