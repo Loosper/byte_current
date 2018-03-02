@@ -24,7 +24,10 @@ class FileSaver extends Component {
         let id = 1;
         for (let file of this.torrent.files) {
             this.files.push(
-                <button key={id++} onClick={(e) => this.save_file(file)} >{file.name}</button>
+                <button
+                    key={id++}
+                    onClick={(e) => this.save_file(file)}
+                >{file.name}</button>
             );
         }
     }
@@ -35,8 +38,8 @@ class FileSaver extends Component {
         let writer = stream.getWriter();
 
         file.createReadStream()
-            .on('data', (data) => {writer.write(data); console.log('fetched data');})
-            .on('end', () => {writer.close(); console.log('done');});
+            .on('data', (data) => writer.write(data))
+            .on('end', () => writer.close());
     }
 
     render() {

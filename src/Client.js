@@ -6,7 +6,6 @@ import TorrentView from './TorrentView.js';
 import FileSaver from './FileSaver.js';
 
 import './Client.css';
-// var parse_torrent = require('parse-torrent');
 
 // TODO: test browser support.
 // This app uses a lot of modern fetures and will break on old browsers
@@ -30,7 +29,6 @@ class Client extends Component {
             console.error('ERROR: ' + err.message);
         });
 
-        // temporary
         this.id = 1;
     }
 

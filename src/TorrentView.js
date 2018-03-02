@@ -28,18 +28,16 @@ class TorrentView extends Component {
     }
 
     componentWillUnmount() {
-        console.log('removing');
         this.props.client.remove(this.magnet);
     }
 
     render() {
-        console.log('rendering a torrent');
         return (
             <div>
                 <TorrentStats torrent={this.torrent}/>
                 <PauseTorrent torrent={this.torrent} />
                 <ResumeTorrent torrent={this.torrent} />
-                <button onClick={(e) => {this.props.remove(this);}} >remove</button>
+                <button onClick={(e) => this.props.remove(this)} >remove</button>
                 <button
                     onClick={(e) => this.props.save(this.torrent)}
                 >save</button>
@@ -104,7 +102,6 @@ class PauseTorrent extends Component {
     // NOTE: this pauses NEW connections
     // looks like an actual pause of download is not supported
     pause_torrent(event) {
-        console.log('paused');
         this.props.torrent.pause();
     }
 }
@@ -121,7 +118,6 @@ class ResumeTorrent extends Component {
     }
 
     resume_torrent(event) {
-        console.log('resumed');
         this.props.torrent.resume();
     }
 }
