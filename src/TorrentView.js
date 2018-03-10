@@ -1,6 +1,16 @@
 import React, { Component } from 'react';
 
 
+function make_button(src, alt, callback) {
+    return <img
+        height={20}
+        widht={20}
+        src={src}
+        alt={alt}
+        onClick={callback}
+    />;
+}
+
 class TorrentView extends Component {
     constructor(props) {
         super(props);
@@ -18,8 +28,6 @@ class TorrentView extends Component {
     }
 
     on_torrent(torrent) {
-        // let info = parse_torrent(torrent.torrentFile);
-        // this.setState({name: info.name});
         this.setState({name: torrent.name});
     }
 
@@ -33,10 +41,16 @@ class TorrentView extends Component {
                 <TorrentStats torrent={this.torrent}/>
                 <PauseTorrent torrent={this.torrent} />
                 <ResumeTorrent torrent={this.torrent} />
-                <button onClick={(e) => this.props.remove(this)} >remove</button>
-                <button
-                    onClick={(e) => this.props.save(this.torrent)}
-                >save</button>
+                {make_button(
+                    'svg/remove_button.svg',
+                    'remove',
+                    (e) => this.props.remove(this)
+                )}
+                {   make_button(
+                    'svg/download_button.svg',
+                    'save',
+                    (e) => this.props.save(this.torrent)
+                )}
             </div>
         );
     }
@@ -86,7 +100,8 @@ class TorrentStats extends Component {
     }
 }
 
-// Unneeded code. You can put into functions of ~3 lines
+// TODO: make buttons dynamic in size
+// Unneeded code. You can puy into functions of ~3 lines
 class PauseTorrent extends Component {
     constructor(props) {
         super(props);
@@ -94,7 +109,11 @@ class PauseTorrent extends Component {
     }
 
     render() {
-        return (<button onClick={this.pause_torrent} >pause</button>);
+        return make_button(
+            'svg/pause_button.svg',
+            'pause',
+            this.pause_torrent
+        );
     }
 
     // NOTE: this pauses NEW connections
@@ -112,7 +131,11 @@ class ResumeTorrent extends Component {
     }
 
     render() {
-        return (<button onClick={this.resume_torrent} >resume</button>);
+        return make_button(
+            'svg/play_button.svg',
+            'play',
+            this.resume_torrent
+        );
     }
 
     resume_torrent(event) {
