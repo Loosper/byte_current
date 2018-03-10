@@ -42,6 +42,7 @@ class FileSaver extends Component {
             .on('end', () => writer.close());
     }
 
+    // REVIEW: upgrade path is to show paths in tree like order
     render() {
         return (
             <div>

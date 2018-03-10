@@ -15,10 +15,6 @@ class TorrentView extends Component {
 
         // BUG: this doesn't stop downloading after metadata fetch
         this.torrent.pause();
-
-        this.state = {
-            save_opts: []
-        };
     }
 
     on_torrent(torrent) {
@@ -53,19 +49,21 @@ class TorrentStats extends Component {
 
         this.update_stats = this.update_stats.bind(this);
 
+        // TODO: show done/downlaoding status
         this.state = {
             name: 'sample',
             download_speed: 0,
             upload_speed: 0,
-            progress: 0,
-            save_opts: []
+            progress: 0
         };
     }
 
     update_stats() {
-        this.setState({download_speed: this.props.torrent.downloadSpeed});
-        this.setState({upload_speed: this.props.torrent.uploadSpeed});
-        this.setState({progress: this.props.torrent.progress});
+        this.setState({
+            download_speed: this.props.torrent.downloadSpeed,
+            upload_speed: this.props.torrent.uploadSpeed,
+            progress: this.props.torrent.progress
+        });
     }
 
     componentDidMount() {
@@ -88,7 +86,7 @@ class TorrentStats extends Component {
     }
 }
 
-
+// Unneeded code. You can put into functions of ~3 lines
 class PauseTorrent extends Component {
     constructor(props) {
         super(props);

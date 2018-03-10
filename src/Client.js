@@ -36,7 +36,6 @@ class Client extends Component {
         this.id = 1;
     }
 
-    // TODO: global upload/downlaod
     add_torrent(magnet_link) {
         let arr = this.state.torrents.slice();
 
