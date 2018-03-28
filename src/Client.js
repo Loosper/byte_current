@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import WebTorrent from 'webtorrent';
 import AddButton from './AddButton.js';
@@ -6,7 +6,7 @@ import TorrentView from './TorrentView.js';
 import FileSaver from './FileSaver.js';
 import NotificationView from './NotificationView';
 import ClientStats from './ClientStats';
-import './Client.css';
+import './css/main.css';
 
 
 // TODO: test browser support.
@@ -37,6 +37,7 @@ class Client extends Component {
     }
 
     add_torrent(magnet_link) {
+        magnet_link = magnet_link.trim();
         let arr = this.state.torrents.slice();
 
         if (magnet_link.match(/\burn:btih:([A-F\d]+)\b/i) == null) {
@@ -46,7 +47,7 @@ class Client extends Component {
 
         if (this.hashes.has(magnet_link)) {
             this.display_error('Torrent already added');
-            return;
+            // return;
         } else {
             this.hashes.add(magnet_link);
         }
@@ -87,16 +88,21 @@ class Client extends Component {
 
     render() {
         return (
-            <div>
-                <header>
-                    <h1>ByteCurrent</h1>
-                </header>
-                <ClientStats client={this.client}/>
-                <AddButton new_torrent={this.add_torrent} />
-                {this.state.torrents}
-                {this.state.saver}
-                {this.state.error}
-            </div>
+            <Fragment>
+                <nav>
+                    <AddButton new_torrent={this.add_torrent} />
+                    {this.state.error}
+                </nav>
+
+                <main>
+                    {this.state.torrents}
+                </main>
+
+                <footer>
+                    <ClientStats client={this.client}/>
+                    {this.state.saver}
+                </footer>
+            </Fragment>
         );
     }
 }

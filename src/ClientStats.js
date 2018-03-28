@@ -31,12 +31,11 @@ class ClientStats extends Component {
     }
 
     render() {
+        // you can add help, contrubute here?
         return (
             <div>
-                <div>Total download:</div>
-                <div> {Math.round(this.state.download_speed / 1024)} Kb/s</div>
-                <div>Total upload:</div>
-                <div> {Math.round(this.state.upload_speed / 1024)} Kb/s</div>
+                <span>Down: {Math.round(this.state.download_speed / 1024)} Kb/s </span>
+                <span>Up: {Math.round(this.state.upload_speed / 1024)} Kb/s</span>
             </div>
         );
     }

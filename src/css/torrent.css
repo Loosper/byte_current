@@ -1,0 +1,11 @@
+.torrent {
+    padding: 0.5em;
+}
+
+.torrent:nth-child(even) {
+    background-color: #b3e6ff;
+}
+
+.torrent:nth-child(odd) {
+    background-color: #005580;
+}

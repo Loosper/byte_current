@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import './css/torrent.css';
 
 
+// REVIEW: use bootstrap glyphicons
 function make_button(src, alt, callback) {
     return <img
-        height={20}
-        widht={20}
+        height={15}
+        widht={15}
         src={src}
         alt={alt}
         onClick={callback}
@@ -15,6 +17,7 @@ class TorrentView extends Component {
     constructor(props) {
         super(props);
         this.on_torrent = this.on_torrent.bind(this);
+        this.make_done = this.make_done.bind(this);
 
         // TODO: custom chunk store; consider not saving for seeding
         this.torrent = props.client.add(
@@ -22,13 +25,19 @@ class TorrentView extends Component {
         );
 
         this.magnet = props.magnet;
-
+        this.state = {done: false};
         // BUG: this doesn't stop downloading after metadata fetch
         this.torrent.pause();
+
+        this.torrent.on('done', this.make_done);
     }
 
     on_torrent(torrent) {
         this.setState({name: torrent.name});
+    }
+
+    make_done() {
+        this.setState({done: true});
     }
 
     componentWillUnmount() {
@@ -37,7 +46,7 @@ class TorrentView extends Component {
 
     render() {
         return (
-            <div>
+            <div className="torrent">
                 <TorrentStats torrent={this.torrent}/>
                 <PauseTorrent torrent={this.torrent} />
                 <ResumeTorrent torrent={this.torrent} />
@@ -46,7 +55,7 @@ class TorrentView extends Component {
                     'remove',
                     (e) => this.props.remove(this)
                 )}
-                {   make_button(
+                {make_button(
                     'svg/download_button.svg',
                     'save',
                     (e) => this.props.save(this.torrent)

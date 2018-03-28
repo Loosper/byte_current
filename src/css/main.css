@@ -1,0 +1,17 @@
+nav {
+    position: fixed;
+    width: 100%;
+    background-color: white;
+}
+
+main {
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+
+footer {
+    position: fixed;
+    background-color: white;
+    bottom: 0px;
+    width: 100%;
+}

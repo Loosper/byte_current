@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-
+import './css/notification.css';
 
 class NotificationView extends Component {
     render() {
-        return (
-            <div>
-                <div>{this.props.message}</div>
-                <button onClick={this.props.close}>close</button>
-            </div>
-        );
+        return <span id="notification">
+            {this.props.message}
+            <button onClick={this.props.close} type="button">
+                &times;
+            </button>
+        </span>;
     }
 }
 
