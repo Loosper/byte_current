@@ -74,11 +74,15 @@ class TorrentStats extends Component {
 
         // TODO: show done/downlaoding status
         this.state = {
-            name: 'sample',
             download_speed: 0,
             upload_speed: 0,
             progress: 0
         };
+
+        this.props.torrent.on(
+            'ready',
+            () => this.setState({name: this.props.torrent.name})
+        );
     }
 
     update_stats() {

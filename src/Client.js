@@ -47,7 +47,7 @@ class Client extends Component {
 
         if (this.hashes.has(magnet_link)) {
             this.display_error('Torrent already added');
-            // return;
+            return;
         } else {
             this.hashes.add(magnet_link);
         }
@@ -80,6 +80,9 @@ class Client extends Component {
         this.setState({
             error: <NotificationView message={error_msg} close={this.close_error}/>
         });
+
+        // TODO: fade it
+        setTimeout(() => this.setState({error: null}), 3000);
     }
 
     close_error() {
