@@ -1,0 +1,97 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: grey;
+    font-family: sans-serif;
+    width: 100%;
+}
+
+form {
+    display: inline-block;
+}
+
+button {
+    background-color: #e7e7e7;
+    transition-duration: 0.2s;
+    display: inline-block;
+    border: 1px solid gray;
+    height: 100%;
+    border-radius: 0px;
+}
+
+button:hover {
+    background-color: white;
+}
+
+input {
+    padding: 0;
+    border: 1px solid gray;
+    border-right: none;
+    border-radius: 0px;
+}
+
+#root nav {
+    position: fixed;
+    width: 100%;
+    background-color: white;
+    padding: 1em;
+}
+
+#root main {
+    padding: 6em 0;
+    width: 100%;
+}
+
+#root footer {
+    position: fixed;
+    background-color: white;
+    bottom: 0px;
+    width: 100%;
+    padding: 0.5em 1em;
+}
+
+.torrent {
+    padding: 2%;
+    width: 99%;
+    text-align: right;
+}
+
+.torrent:nth-child(even) {
+    background-color: #b3e6ff;
+}
+
+.torrent:nth-child(odd) {
+    background-color: #005580;
+}
+
+#notification {
+    float: right;
+    background-color: red;
+    border-radius: 4px;
+}
+
+.torrent span {
+    display: inline-block;
+    border: 1px solid red;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.torrent .title {
+    width: 50%;
+    text-align: left;
+}
+
+.torrent .up-speed, .torrent .down-speed, .torrent .progress{
+    width: 10%;
+}
+
+.torrent .buttons {
+    width: 19%;
+}
+
+#root {
+    height: 100%;
+    width: 100%;
+}

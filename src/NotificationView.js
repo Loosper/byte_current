@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './css/notification.css';
 
 class NotificationView extends Component {
     render() {

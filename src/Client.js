@@ -6,8 +6,7 @@ import TorrentView from './TorrentView.js';
 import FileSaver from './FileSaver.js';
 import NotificationView from './NotificationView';
 import ClientStats from './ClientStats';
-import './css/main.css';
-
+import './client.css';
 
 // TODO: test browser support.
 // This app uses a lot of modern fetures and will break on old browsers
@@ -47,7 +46,7 @@ class Client extends Component {
 
         if (this.hashes.has(magnet_link)) {
             this.display_error('Torrent already added');
-            return;
+            // return;
         } else {
             this.hashes.add(magnet_link);
         }

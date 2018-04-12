@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
-import './css/addButton.css';
 
 class AddButton extends Component {
     constructor(props) {
         super(props);
-        this.state = {link: ''};
+        this.state = {link: 'magnet:?xt=urn:btih:e3d1a87aaa9ab4ff8723bf25ea03c8dbb7458453'};
 
         this.on_submit = this.on_submit.bind(this);
         this.on_change = this.on_change.bind(this);

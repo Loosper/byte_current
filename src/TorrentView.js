@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import './css/torrent.css';
 
 
 // REVIEW: use bootstrap glyphicons
@@ -25,7 +24,9 @@ class TorrentView extends Component {
         );
 
         this.magnet = props.magnet;
-        this.state = {done: false};
+        this.state = {
+            done: false
+        };
         // BUG: this doesn't stop downloading after metadata fetch
         this.torrent.pause();
 
@@ -48,18 +49,20 @@ class TorrentView extends Component {
         return (
             <div className="torrent">
                 <TorrentStats torrent={this.torrent}/>
-                <PauseTorrent torrent={this.torrent} />
-                <ResumeTorrent torrent={this.torrent} />
-                {make_button(
-                    'svg/remove_button.svg',
-                    'remove',
-                    (e) => this.props.remove(this)
-                )}
-                {make_button(
-                    'svg/download_button.svg',
-                    'save',
-                    (e) => this.props.save(this.torrent)
-                )}
+                <span className="buttons">
+                    <PauseTorrent torrent={this.torrent} />
+                    <ResumeTorrent torrent={this.torrent} />
+                    {make_button(
+                        'svg/remove_button.svg',
+                        'remove',
+                        (e) => this.props.remove(this)
+                    )}
+                    {make_button(
+                        'svg/download_button.svg',
+                        'save',
+                        (e) => this.props.save(this.torrent)
+                    )}
+                </span>
             </div>
         );
     }
@@ -74,6 +77,7 @@ class TorrentStats extends Component {
 
         // TODO: show done/downlaoding status
         this.state = {
+            name: '(missin title)',
             download_speed: 0,
             upload_speed: 0,
             progress: 0
@@ -104,10 +108,10 @@ class TorrentStats extends Component {
     render() {
         return (
             <React.Fragment>
-                <span> {this.state.name} </span>
-                <span> {this.state.progress.toFixed(2)} </span>
-                <span> {Math.round(this.state.download_speed / 1024)} Kb/s</span>
-                <span> {Math.round(this.state.upload_speed / 1024)} Kb/s</span>
+                <span className="title"> {this.state.name} </span>
+                <span className="progress"> {this.state.progress.toFixed(2)} </span>
+                <span className="down-speed"> {Math.round(this.state.download_speed / 1024)} Kb/s</span>
+                <span className="up-speed"> {Math.round(this.state.upload_speed / 1024)} Kb/s</span>
             </React.Fragment>
         );
     }
