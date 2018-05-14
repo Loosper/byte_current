@@ -1,78 +1,121 @@
 html, body {
     margin: 0;
     padding: 0;
-    background-color: grey;
+    background-color: #97c2d7;
     font-family: sans-serif;
     width: 100%;
 }
 
 form {
-    display: inline-block;
-}
-
-button {
-    background-color: #e7e7e7;
-    transition-duration: 0.2s;
-    display: inline-block;
-    border: 1px solid gray;
-    height: 100%;
-    border-radius: 0px;
-}
-
-button:hover {
-    background-color: white;
-}
-
-input {
-    padding: 0;
-    border: 1px solid gray;
-    border-right: none;
-    border-radius: 0px;
+    display: inline;
 }
 
 #root nav {
     position: fixed;
     width: 100%;
-    background-color: white;
-    padding: 1em;
+    padding: 0.5em 1em 1em 1em;
+    height: 1.5em;
+    border-width: 0 0 1px 0;
 }
 
 #root main {
-    padding: 6em 0;
+    padding: 3.3em 0 2.4em 0;
     width: 100%;
 }
 
 #root footer {
     position: fixed;
-    background-color: white;
     bottom: 0px;
     width: 100%;
     padding: 0.5em 1em;
+    border-width: 1px 0 0 0;
+}
+
+#root nav, #root footer {
+    border-style: solid;
+    border-color: #5c7c8c;
+    background-color: #2f5b73;
+    color: white;
+    box-shadow: 0 0 5px 0 black;
 }
 
 .torrent {
-    padding: 2%;
-    width: 99%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding: 0 2%;
+    width: 96%;
     text-align: right;
 }
 
 .torrent:nth-child(even) {
-    background-color: #b3e6ff;
+    background-color: #97c2d7;
 }
 
 .torrent:nth-child(odd) {
-    background-color: #005580;
+    background-color: #7fadc4;
 }
 
 #notification {
     float: right;
-    background-color: red;
-    border-radius: 4px;
+    background-color: #d42727;
+    margin-right: 3em;
+}
+
+#notification span {
+    padding: 0 0.5em;
+}
+
+#root nav button {
+    display: inline-block;
+    width: 1.4em;
+    height: 1.4em;
+    text-align: center;
+    padding: 0;
+    font-size: 1.3em;
+    border: 0;
+}
+
+#notification button {
+    color: white;
+    background-color: #621212;
+}
+
+#notification button:hover {
+    background-color: #9d1b1b;
+}
+
+#notification button:active {
+    background-color: #3b0a0a;
+}
+
+#root nav input {
+    float: left;
+    display: inline-block;
+    margin: 0;
+    border: 1px solid grey;
+    height: 1.3em;
+    padding: 0.3em;
+    font-size: 0.9em;
+}
+
+#root nav #add-button {
+    float: left;
+    color: black;
+    background-color: #e7e7e7;
+}
+
+#root nav #add-button:hover {
+    background-color: white;
+}
+
+#root nav #add-button:active {
+    background-color: gray;
+    color: white;
 }
 
 .torrent span {
-    display: inline-block;
-    border: 1px solid red;
+    align-self: center;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -94,4 +137,36 @@ input {
 #root {
     height: 100%;
     width: 100%;
+}
+
+.torrent .buttons path {
+    fill: white;
+}
+
+.svg-button {
+    width: 16px;
+    height: 16px;
+    fill: #ffe162;
+    padding: 8px;
+    cursor: pointer;
+}
+
+.svg-button:hover {
+    fill: #17719f;
+}
+
+.svg-button:active {
+    fill: #4408c4;
+}
+
+#file-saver {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 77%;
+    height: 67%;
+    background-color: #57758b;
+    padding: 3%;
+    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.8);
+    border-radius: 3px;
 }
