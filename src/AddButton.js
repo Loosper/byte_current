@@ -31,7 +31,7 @@ class AddButton extends Component {
                 <button
                     id="add-button"
                     type="submit"
-                >Add</button>
+                >+</button>
             </form>
         );
     }
