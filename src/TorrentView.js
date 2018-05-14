@@ -1,15 +1,10 @@
 import React, { Component } from 'react';
 
 
-// REVIEW: use bootstrap glyphicons
-function make_button(src, alt, callback) {
-    return <img
-        height={15}
-        width={15}
-        src={src}
-        alt={alt}
-        onClick={callback}
-    />;
+function make_button(src, callback) {
+    return <svg className={'svg-button svg-' + src} onClick={callback}>
+        <use xlinkHref={'svg/buttons.svg#button-' + src}></use>
+    </svg>;
 }
 
 class TorrentView extends Component {
@@ -52,13 +47,11 @@ class TorrentView extends Component {
                 <span className="buttons">
                     <PauseTorrent torrent={this.torrent} />
                     {make_button(
-                        'svg/remove_button.svg',
                         'remove',
                         (e) => this.props.remove(this)
                     )}
                     {make_button(
-                        'svg/download_button.svg',
-                        'save',
+                        'download',
                         (e) => this.props.save(this.torrent)
                     )}
                 </span>
@@ -130,13 +123,11 @@ class PauseTorrent extends Component {
     render() {
         if (this.state.paused) {
             return make_button(
-                'svg/play_button.svg',
                 'play',
                 this.resume_torrent
             );
         } else {
             return make_button(
-                'svg/pause_button.svg',
                 'pause',
                 this.pause_torrent
             );
