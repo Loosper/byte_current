@@ -5,7 +5,7 @@ import React, { Component } from 'react';
 function make_button(src, alt, callback) {
     return <img
         height={15}
-        widht={15}
+        width={15}
         src={src}
         alt={alt}
         onClick={callback}
@@ -51,7 +51,6 @@ class TorrentView extends Component {
                 <TorrentStats torrent={this.torrent}/>
                 <span className="buttons">
                     <PauseTorrent torrent={this.torrent} />
-                    <ResumeTorrent torrent={this.torrent} />
                     {make_button(
                         'svg/remove_button.svg',
                         'remove',
@@ -77,7 +76,7 @@ class TorrentStats extends Component {
 
         // TODO: show done/downlaoding status
         this.state = {
-            name: '(missin title)',
+            name: '(missing title)',
             download_speed: 0,
             upload_speed: 0,
             progress: 0
@@ -123,40 +122,36 @@ class PauseTorrent extends Component {
     constructor(props) {
         super(props);
         this.pause_torrent = this.pause_torrent.bind(this);
+        this.resume_torrent = this.resume_torrent.bind(this);
+
+        this.state = {paused: false};
     }
 
     render() {
-        return make_button(
-            'svg/pause_button.svg',
-            'pause',
-            this.pause_torrent
-        );
+        if (this.state.paused) {
+            return make_button(
+                'svg/play_button.svg',
+                'play',
+                this.resume_torrent
+            );
+        } else {
+            return make_button(
+                'svg/pause_button.svg',
+                'pause',
+                this.pause_torrent
+            );
+        }
     }
-
     // NOTE: this pauses NEW connections
     // looks like an actual pause of download is not supported
     pause_torrent(event) {
         this.props.torrent.pause();
-    }
-}
-
-
-class ResumeTorrent extends Component {
-    constructor(props) {
-        super(props);
-        this.resume_torrent = this.resume_torrent.bind(this);
-    }
-
-    render() {
-        return make_button(
-            'svg/play_button.svg',
-            'play',
-            this.resume_torrent
-        );
+        this.setState({paused: true});
     }
 
     resume_torrent(event) {
         this.props.torrent.resume();
+        this.setState({paused: false});
     }
 }
 
