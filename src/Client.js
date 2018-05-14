@@ -19,6 +19,7 @@ class Client extends Component {
         this.remove_torrent = this.remove_torrent.bind(this);
         this.save_torrent = this.save_torrent.bind(this);
         this.close_error = this.close_error.bind(this);
+        this.close_saver = this.close_saver.bind(this);
 
         this.state = {
             torrents: [],
@@ -62,7 +63,14 @@ class Client extends Component {
     }
 
     save_torrent(torrent) {
-        this.setState({saver: <FileSaver torrent={torrent} />});
+        this.setState({saver: <FileSaver
+            torrent={torrent}
+            close={this.close_saver}
+        />});
+    }
+
+    close_saver() {
+        this.setState({saver: null});
     }
 
     remove_torrent(torrent_view) {
@@ -77,11 +85,11 @@ class Client extends Component {
 
     display_error(error_msg) {
         this.setState({
-            error: <NotificationView message={error_msg} close={this.close_error}/>
+            error: <NotificationView
+                message={error_msg}
+                close={this.close_error}
+            />
         });
-
-        // TODO: fade it
-        setTimeout(() => this.setState({error: null}), 3000);
     }
 
     close_error() {
@@ -92,8 +100,8 @@ class Client extends Component {
         return (
             <Fragment>
                 <nav>
-                    <AddButton new_torrent={this.add_torrent} />
                     {this.state.error}
+                    <AddButton new_torrent={this.add_torrent} />
                 </nav>
 
                 <main>
@@ -102,8 +110,9 @@ class Client extends Component {
 
                 <footer>
                     <ClientStats client={this.client}/>
-                    {this.state.saver}
                 </footer>
+
+                {this.state.saver}
             </Fragment>
         );
     }
