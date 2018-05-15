@@ -3,7 +3,6 @@ import React, { Component, Fragment } from 'react';
 import WebTorrent from 'webtorrent';
 import AddButton from './AddButton.js';
 import TorrentView from './TorrentView.js';
-import FileSaver from './FileSaver.js';
 import NotificationView from './NotificationView';
 import ClientStats from './ClientStats';
 import './client.css';
@@ -17,13 +16,10 @@ class Client extends Component {
         super(props);
         this.add_torrent = this.add_torrent.bind(this);
         this.remove_torrent = this.remove_torrent.bind(this);
-        this.save_torrent = this.save_torrent.bind(this);
         this.close_error = this.close_error.bind(this);
-        this.close_saver = this.close_saver.bind(this);
 
         this.state = {
             torrents: [],
-            saver: null,
             error: null
         };
         this.client = new WebTorrent();
@@ -47,7 +43,7 @@ class Client extends Component {
 
         if (this.hashes.has(magnet_link)) {
             this.display_error('Torrent already added');
-            // return;
+            return;
         } else {
             this.hashes.add(magnet_link);
         }
@@ -57,20 +53,8 @@ class Client extends Component {
             magnet={magnet_link}
             client={this.client}
             remove={this.remove_torrent}
-            save={this.save_torrent}
         />);
         this.setState({torrents: arr});
-    }
-
-    save_torrent(torrent) {
-        this.setState({saver: <FileSaver
-            torrent={torrent}
-            close={this.close_saver}
-        />});
-    }
-
-    close_saver() {
-        this.setState({saver: null});
     }
 
     remove_torrent(torrent_view) {
@@ -79,7 +63,7 @@ class Client extends Component {
 
         new_torrents.splice(index, 1);
 
-        this.setState({torrents: new_torrents, saver: null});
+        this.setState({torrents: new_torrents});
         this.hashes.delete(torrent_view.magnet);
     }
 
@@ -100,8 +84,8 @@ class Client extends Component {
         return (
             <Fragment>
                 <nav>
-                    {this.state.error}
                     <AddButton new_torrent={this.add_torrent} />
+                    {this.state.error}
                 </nav>
 
                 <main>
@@ -111,8 +95,6 @@ class Client extends Component {
                 <footer>
                     <ClientStats client={this.client}/>
                 </footer>
-
-                {this.state.saver}
             </Fragment>
         );
     }

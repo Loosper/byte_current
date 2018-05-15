@@ -65,13 +65,23 @@ class FileSaver extends Component {
     // REVIEW: upgrade path is to show paths in tree like order
     render() {
         return (
-            <div id="file-saver">
-                {'Select files to save from ' + this.torrent.name}
-                <div>{this.file_buttons}</div>
-                <button onClick={this.save_files}>Ok</button>
-                <button onClick={this.props.close}>Cancel</button>
-            </div>
+            <React.Fragment>
+
+                <fieldset>
+                    <legend>
+                        {'Select files to save from "' + this.torrent.name + '"'}
+                    </legend>
+                    {this.file_buttons}
+                    <button onClick={this.save_files}>
+                        <svg className={'svg-button svg-download'}>
+                            <use xlinkHref={'svg/buttons.svg#button-download'}></use>
+                        </svg>
+                        <span>{'Download'}</span>
+                    </button>
+                </fieldset><br/>
+            </React.Fragment>
         );
+        // <button onClick={this.props.close}>Cancel</button>
     }
 }
 
@@ -101,12 +111,14 @@ class CheckBox extends Component{
 
     render() {
         return <React.Fragment>
-            <input
-                type="checkbox"
-                checked={this.state.checked}
-                onChange={this.click}
-            />
-            <label>{this.file.name}</label>
+            <label title={this.file.name}>
+                <input
+                    type="checkbox"
+                    checked={this.state.checked}
+                    onChange={this.click}
+                />
+                <span>{this.file.name}</span>
+            </label>
         </React.Fragment>;
     }
 }

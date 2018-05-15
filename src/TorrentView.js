@@ -1,5 +1,5 @@
+import FileSaver from './FileSaver.js';
 import React, { Component } from 'react';
-
 
 function make_button(src, callback) {
     return <svg className={'svg-button svg-' + src} onClick={callback}>
@@ -12,6 +12,8 @@ class TorrentView extends Component {
         super(props);
         this.on_torrent = this.on_torrent.bind(this);
         this.make_done = this.make_done.bind(this);
+        this.save_torrent = this.save_torrent.bind(this);
+        this.close_saver = this.close_saver.bind(this);
 
         // TODO: custom chunk store; consider not saving for seeding
         this.torrent = props.client.add(
@@ -20,7 +22,8 @@ class TorrentView extends Component {
 
         this.magnet = props.magnet;
         this.state = {
-            done: false
+            done: false,
+            saver: null
         };
         // BUG: this doesn't stop downloading after metadata fetch
         this.torrent.pause();
@@ -36,25 +39,41 @@ class TorrentView extends Component {
         this.setState({done: true});
     }
 
+    save_torrent(torrent) {
+        if (!this.state.saver) {
+            this.setState({saver: <FileSaver
+                torrent={torrent}
+                close={this.close_saver}
+            />});
+        } else {
+            this.close_saver();
+        }
+    }
+
+    close_saver() {
+        this.setState({saver: null});
+    }
+
     componentWillUnmount() {
         this.props.client.remove(this.magnet);
     }
 
     render() {
         return (
-            <div className="torrent">
-                <TorrentStats torrent={this.torrent}/>
-                <span className="buttons">
-                    <PauseTorrent torrent={this.torrent} />
-                    {make_button(
-                        'remove',
-                        (e) => this.props.remove(this)
-                    )}
-                    {make_button(
-                        'download',
-                        (e) => this.props.save(this.torrent)
-                    )}
-                </span>
+            <div className="torrent-container">
+                <div className="torrent" onClick={(e) => this.save_torrent(this.torrent)}>
+                    <TorrentStats torrent={this.torrent}/>
+                    <span className="buttons">
+                        <PauseTorrent torrent={this.torrent} />
+                        {make_button(
+                            'remove',
+                            (e) => this.props.remove(this)
+                        )}
+                    </span>
+                </div>
+                <div className="details">
+                    {this.state.saver}
+                </div>
             </div>
         );
     }
@@ -98,12 +117,18 @@ class TorrentStats extends Component {
     }
 
     render() {
+        let progress = this.state.progress.toFixed(2);
+        let down_speed = Math.round(this.state.download_speed / 1024);
+        let up_speed = Math.round(this.state.upload_speed / 1024);
         return (
             <React.Fragment>
-                <span className="title"> {this.state.name} </span>
-                <span className="progress"> {this.state.progress.toFixed(2)} </span>
-                <span className="down-speed"> {Math.round(this.state.download_speed / 1024)} Kb/s</span>
-                <span className="up-speed"> {Math.round(this.state.upload_speed / 1024)} Kb/s</span>
+                <span
+                    className="title"
+                    title={this.state.name}
+                > {this.state.name} </span>
+                <span className="progress" title={progress}> {progress} </span>
+                <span className="down-speed" title={down_speed}> {down_speed} Kb/s</span>
+                <span className="up-speed" title={up_speed}> {up_speed} Kb/s</span>
             </React.Fragment>
         );
     }

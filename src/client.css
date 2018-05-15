@@ -7,23 +7,30 @@ html, body {
 }
 
 form {
-    display: inline;
+    display: flex;
+    white-space: nowrap;
+    flex: 1;
+    align-self: center;
+    padding-right: 2%;
 }
 
-#root nav {
+#root > nav {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
     position: fixed;
-    width: 100%;
-    padding: 0.5em 1em 1em 1em;
+    width: 98%;
+    padding: 0.5em 1%;
     height: 1.5em;
     border-width: 0 0 1px 0;
 }
 
-#root main {
-    padding: 3.3em 0 2.4em 0;
+#root > main {
+    padding: 2.8em 0 2.4em 0;
     width: 100%;
 }
 
-#root footer {
+#root > footer {
     position: fixed;
     bottom: 0px;
     width: 100%;
@@ -31,7 +38,7 @@ form {
     border-width: 1px 0 0 0;
 }
 
-#root nav, #root footer {
+#root > nav, #root > footer {
     border-style: solid;
     border-color: #5c7c8c;
     background-color: #2f5b73;
@@ -42,31 +49,45 @@ form {
 .torrent {
     display: flex;
     flex-direction: row;
-    justify-content: center;
     padding: 0 2%;
     width: 96%;
     text-align: right;
+    align-items: stretch;
 }
 
-.torrent:nth-child(even) {
+.torrent:hover {
+    background-color: #ade0f9;
+}
+
+.torrent-container:nth-child(even){
     background-color: #97c2d7;
 }
 
-.torrent:nth-child(odd) {
+.torrent-container:nth-child(odd){
     background-color: #7fadc4;
 }
 
 #notification {
-    float: right;
+    white-space: nowrap;
+    align-self: center;
+    justify-content: flex-end;
+    /* flex: 1; */
+    /* float: right; */
     background-color: #d42727;
-    margin-right: 3em;
+    /* margin-right: 3em; */
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
 }
 
 #notification span {
+    overflow: hidden;
+    text-overflow: ellipsis;
     padding: 0 0.5em;
+    align-self: center;
 }
 
-#root nav button {
+#root > nav button {
     display: inline-block;
     width: 1.4em;
     height: 1.4em;
@@ -79,6 +100,7 @@ form {
 #notification button {
     color: white;
     background-color: #621212;
+    min-width: 1.4em;
 }
 
 #notification button:hover {
@@ -89,8 +111,9 @@ form {
     background-color: #3b0a0a;
 }
 
-#root nav input {
-    float: left;
+#root > nav input {
+    /* float: left; */
+    flex: 1;
     display: inline-block;
     margin: 0;
     border: 1px solid grey;
@@ -99,17 +122,17 @@ form {
     font-size: 0.9em;
 }
 
-#root nav #add-button {
-    float: left;
+#root > nav #add-button {
+    /* float: left; */
     color: black;
     background-color: #e7e7e7;
 }
 
-#root nav #add-button:hover {
+#root > nav #add-button:hover {
     background-color: white;
 }
 
-#root nav #add-button:active {
+#root > nav #add-button:active {
     background-color: gray;
     color: white;
 }
@@ -122,16 +145,19 @@ form {
 }
 
 .torrent .title {
-    width: 50%;
+    flex: 2;
+    /* width: 50%; */
     text-align: left;
 }
 
 .torrent .up-speed, .torrent .down-speed, .torrent .progress{
-    width: 10%;
+    flex: 1;
+    /* width: 10%; */
 }
 
 .torrent .buttons {
-    width: 19%;
+    flex: 1;
+    /* width: 19%; */
 }
 
 #root {
@@ -159,14 +185,65 @@ form {
     fill: #4408c4;
 }
 
-#file-saver {
-    position: absolute;
-    top: 10%;
-    left: 10%;
-    width: 77%;
-    height: 67%;
-    background-color: #57758b;
-    padding: 3%;
-    box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.8);
-    border-radius: 3px;
+.torrent-container .details {
+    padding: 0 2% 0 2%;
+    width: 96%;
+    /* background-color: #57758b; */
+}
+
+
+.details label {
+    display: inline-block;
+    width: 100%;
+}
+
+.details label:hover {
+    background-color: #3e535d;
+    color: white
+}
+
+.details legend {
+    color: #416f86;
+}
+
+.details fieldset {
+    border-color: #5799ba;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.details button {
+    display: inline-block;
+    width: 8em;
+    height: 2em;
+    text-align: center;
+    padding: 0;
+    margin-left: 0.2em;
+    margin-top: 0.2em;
+    font-size: 1em;
+    border: 0;
+    display: flex;
+    flex-direction: row;
+}
+
+.details button span {
+    align-self: center;
+}
+
+.details button:hover {
+    color: #17719f;
+}
+
+.details button:hover .svg-button {
+    fill: #17719f;
+}
+
+.details svg {
+    fill: #3aaee7;
+}
+
+.torrent .divider {
+    width: 2px;
+    height: 1em;
+    border-right: 1px dotted white;
 }
